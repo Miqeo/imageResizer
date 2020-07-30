@@ -25,5 +25,5 @@
 // img.src = "//i.imgur.com/SHo6Fub.jpg";
 
 function saveToZip() {
-    print("Save");
+    alert("Save");
 }
