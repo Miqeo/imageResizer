@@ -1,78 +1,77 @@
 
-let dropArea = document.getElementById("drop-area")
+var imgSave = new Image();
+var imgName = "";
 
-// Prevent default drag behaviors
-;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-  dropArea.addEventListener(eventName, preventDefaults, false)   
-  document.body.addEventListener(eventName, preventDefaults, false)
-})
-
-// Highlight drop area when item is dragged over it
-;['dragenter', 'dragover'].forEach(eventName => {
-  dropArea.addEventListener(eventName, highlight, false)
-})
-
-;['dragleave', 'drop'].forEach(eventName => {
-  dropArea.addEventListener(eventName, unhighlight, false)
-})
-
-// Handle dropped files
-dropArea.addEventListener('drop', handleDrop, false)
-
-function preventDefaults (e) {
-  e.preventDefault()
-  e.stopPropagation()
-}
-
-function highlight(e) {
-  dropArea.classList.add('highlight')
-}
-
-function unhighlight(e) {
-  dropArea.classList.remove('active')
-}
-
-function handleDrop(e) {
-  var dt = e.dataTransfer
-  var files = dt.files
-
-  handleFiles(files)
-}
-
-function handleFiles(files) {
-  files = [...files]
-  
-  files.forEach(uploadFile)
-  files.forEach(previewFile)
-}
+window.addEventListener('load', function() {
+  document.querySelector('input[type="file"]').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+          var img = document.querySelector('img');
+          img.src = URL.createObjectURL(this.files[0]);
+          imgName = this.files[0].name.split(".")[0];
+          imgSave.src = img.src;
+          document.getElementById('myImg').style.display = 'block';
+      }
+  });
+});
 
 
-function uploadFile(file, i) {
-  var url = 'file:///Users/michal/Desktop/Image%20resizer%20page/index.html'
-  var xhr = new XMLHttpRequest()
-  var formData = new FormData()
-  xhr.open('POST', url, true)
-  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-
-  // Update progress (can be used to show progress indicator)
-  xhr.upload.addEventListener("progress", function(e) {
-    updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
-  })
-
-  xhr.addEventListener('readystatechange', function(e) {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-       // <- Add this
-    }
-    else if (xhr.readyState == 4 && xhr.status != 200) {
-      // Error. Inform the user
-    }
-  })
-
-  
-  formData.append('file', file)
-  xhr.send(formData)
-}
+window.onload = function() {
+    document.getElementById('myImg').style.display = 'none';
+    
+};
 
 function saveToZip() {
-    console.log("Save");
+    //33 66 100
+    let canvases = ["canvas1", "canvas2", "canvas3"];
+    var zip = new JSZip();
+    
+    for (name in canvases){
+        
+        var canvas = document.getElementById(canvases[name]);
+        var ctx = canvas.getContext("2d");
+
+        canvas.height = canvas.width * (imgSave.height / imgSave.width);
+
+        var oc = document.createElement('canvas'),
+
+        octx = oc.getContext('2d');
+
+        oc.width = 100;
+        oc.height = 100;
+        octx.drawImage(imgSave, 0, 0, oc.width, oc.height);
+
+
+        octx.drawImage(oc, 0, 0, oc.width, oc.height);
+
+
+        ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, canvas.width, canvas.height);
+
+        
+        
+        var gh = canvas.toDataURL('png');
+        
+        var img = zip.folder(imgName + " images");
+        
+        var nameNr = name == 0 ? "" : "@" + (parseInt(name) + 1) + "x";
+        
+        img.file(imgName + nameNr + ".png", gh.replace(/^data:image\/(png|jpg);base64,/, ""), {base64: true});
+        
+        
+        
+        
+        
+    }
+    
+    
+    
+    zip.generateAsync({type:"blob"}).then(function(content) {
+        
+        saveAs(content, imgName + ".zip");
+    });
+    
+
+    
 }
+
+
+

@@ -10,17 +10,45 @@
 </head>
 
 <body>
-  
-    
-    <button class="button" type="button" onclick="saveToZip()">Save</button>
 
     <div id="drop-area">
-        <form class="my-form">
-            <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
-            <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
-            <label class="button" for="fileElem">Select some files</label>
-        </form>
+        
+        <p>Upload one image to change its parameters</p>
+        <input type='file' id="fileElem" multiple accept="image/*"/>
+        <label class="button button-bottom" for="fileElem">Select some file</label>
+        <img id="myImg" src="#" alt="Your image will display here" height=200 width=200>
+        
     </div>
+    
+    
+    <div id="save-area">
+        
+        <!--
+        <div class="switch-toggle switch-3 switch-candy">
+
+            <input id="on" name="state-d" type="radio" checked="" />
+            <label for="on" onclick="">X1</label>
+
+            <input id="na" name="state-d" type="radio" checked="checked" />
+            <label for="na" class="disabled" onclick="">X2</label>
+
+            <input id="off" name="state-d" type="radio" />
+            <label for="off" onclick="">X3</label>
+
+        </div>
+        -->
+        
+
+        <button class="button button-wide button-bottom" type="button" onclick="saveToZip()">Save</button>
+        
+        <canvas id="canvas1" width=33 height=33 class="canvas-spread"></canvas>
+        <canvas id="canvas2" width=66 height=66 class="canvas-spread"></canvas>
+        <canvas id="canvas3" width=100 height=100 class="canvas-spread"></canvas>
+    
+    </div>
+    
+    <script src="FileSaver.js"></script>
+    <script src="zip.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
