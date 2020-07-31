@@ -2,18 +2,25 @@
 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>Image Resizer</title>
-
+    <meta charset="utf-8">
+    
+    <title>Image Resizer</title>
+    <link rel="stylesheet" href="styles.css">
 
 </head>
 
 <body>
-  <script src="script.js"></script>
+  
     
-    <button type="button" onclick="saveToZip()">Save</button>
-    
+    <button class="button" type="button" onclick="saveToZip()">Save</button>
+
+    <div id="drop-area">
+        <form class="my-form">
+            <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
+            <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+            <label class="button" for="fileElem">Select some files</label>
+        </form>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>

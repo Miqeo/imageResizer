@@ -1,29 +1,78 @@
-// var canvas = document.getElementById("canvas");
-// var ctx = canvas.getContext("2d");
-// var img = new Image();
 
-// img.onload = function () {
+let dropArea = document.getElementById("drop-area")
 
-//     // set size proportional to image
-//     canvas.height = canvas.width * (img.height / img.width);
+// Prevent default drag behaviors
+;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, preventDefaults, false)   
+  document.body.addEventListener(eventName, preventDefaults, false)
+})
 
-//     // step 1 - resize to 50%
-//     var oc = document.createElement('canvas'),
-//         octx = oc.getContext('2d');
+// Highlight drop area when item is dragged over it
+;['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, highlight, false)
+})
 
-//     oc.width = img.width * 0.5;
-//     oc.height = img.height * 0.5;
-//     octx.drawImage(img, 0, 0, oc.width, oc.height);
+;['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, unhighlight, false)
+})
 
-//     // step 2
-//     octx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5);
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false)
 
-//     // step 3, resize to final size
-//     ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
-//     0, 0, canvas.width, canvas.height);
-// }
-// img.src = "//i.imgur.com/SHo6Fub.jpg";
+function preventDefaults (e) {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
+function highlight(e) {
+  dropArea.classList.add('highlight')
+}
+
+function unhighlight(e) {
+  dropArea.classList.remove('active')
+}
+
+function handleDrop(e) {
+  var dt = e.dataTransfer
+  var files = dt.files
+
+  handleFiles(files)
+}
+
+function handleFiles(files) {
+  files = [...files]
+  
+  files.forEach(uploadFile)
+  files.forEach(previewFile)
+}
+
+
+function uploadFile(file, i) {
+  var url = 'file:///Users/michal/Desktop/Image%20resizer%20page/index.html'
+  var xhr = new XMLHttpRequest()
+  var formData = new FormData()
+  xhr.open('POST', url, true)
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+  // Update progress (can be used to show progress indicator)
+  xhr.upload.addEventListener("progress", function(e) {
+    updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+  })
+
+  xhr.addEventListener('readystatechange', function(e) {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+       // <- Add this
+    }
+    else if (xhr.readyState == 4 && xhr.status != 200) {
+      // Error. Inform the user
+    }
+  })
+
+  
+  formData.append('file', file)
+  xhr.send(formData)
+}
 
 function saveToZip() {
-    alert("Save");
+    console.log("Save");
 }
